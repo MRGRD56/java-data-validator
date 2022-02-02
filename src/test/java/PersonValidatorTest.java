@@ -11,8 +11,17 @@ public class PersonValidatorTest {
         var validator = new PersonValidator(person);
         Assertions.assertFalse(validator.isValid());
         Assertions.assertEquals(2, validator.getErrors().size());
-        Assertions.assertTrue(validator.getErrors().stream().anyMatch(error -> error.equals("Field \"firstName\" of type \"String\" is required")));
+        Assertions.assertTrue(validator.getErrors().stream().anyMatch(error -> error.equals("First name is required")));
         Assertions.assertTrue(validator.getErrors().stream().anyMatch(error -> error.equals("Age must be a positive number")));
+    }
+
+    @Test
+    public void TestInvalidLastName() {
+        var person = new Person("FN", null, 12);
+        var validator = new PersonValidator(person);
+        Assertions.assertFalse(validator.isValid());
+        Assertions.assertEquals(1, validator.getErrors().size());
+        Assertions.assertTrue(validator.getErrors().stream().anyMatch(error -> error.equals("Field \"lastName\" of type \"String\" is required")));
     }
 
     @Test

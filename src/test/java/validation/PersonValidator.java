@@ -13,7 +13,7 @@ public final class PersonValidator extends DataValidator<Person> {
     @Override
     protected List<String> validate(Person object) {
         return validationBuilder()
-                .addRequiredField("firstName")
+                .addRequiredField("firstName", "First name is required")
                 .addRequiredField("lastName")
                 .addRule(object.age() >= 0, "Age must be a positive number")
                 .build();

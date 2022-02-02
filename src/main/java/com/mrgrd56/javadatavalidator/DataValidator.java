@@ -89,15 +89,25 @@ public abstract class DataValidator<T> {
         }
 
         public DataValidatorErrorsBuilder addRequiredField(String fieldName) {
+            return addRequiredField(fieldName, null);
+        }
+
+        public DataValidatorErrorsBuilder addRequiredField(String fieldName, String invalidMessage) {
             Class<?> objectClass = dataValidator.getObject().getClass();
             try {
                 Field field = objectClass.getDeclaredField(fieldName);
                 field.setAccessible(true);
-                String typeName = field.getType().getSimpleName();
                 Object fieldValue = field.get(dataValidator.getObject());
+
+                String error;
+                if (invalidMessage == null) {
+                    String typeName = field.getType().getSimpleName();
+                    error = String.format("Field \"%s\" of type \"%s\" is required", fieldName, typeName);
+                } else {
+                    error = invalidMessage;
+                }
                 field.setAccessible(false);
 
-                String error = String.format("Field \"%s\" of type \"%s\" is required", fieldName, typeName);
                 return this.addRequired(fieldValue, error);
             } catch (NoSuchFieldException e) {
                 throw new RuntimeException(
